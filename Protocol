@@ -1,0 +1,71 @@
+HTTP 工作原理
+1. 客户端连接到Web服务器
+   http的客户端一般是浏览器， 与Web服务器的HTTP端口（默认是80）建立一个TCP套接字连接。
+2. 发送HTTP请求
+   通过TCP套接字，客户端向HTTP服务器发送一个文本请求报文， 一个报文由请求行，请求头部，空行，请求数据 4部分组成。
+3. 服务器接受请求并返回http响应
+   Web服务器解析请求， 定位请求资源， 服务器将资源副本写入TCP套接字， 由客户端读取。 一个响应由状态行， 响应头部， 空行， 响应数据 4部分。
+4. 释放连接（TCP连接）
+   若connection模式为close， 则服务器主动关闭TCP连接， 客户端被动关闭连接； 若connection模式为keepalive， 则连接会保持一段时间，
+   在该时间内可以继续接受请求。
+5. 客户端浏览器解析HTML内容
+   客户端浏览器首先解析状态行， 查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知如下为若干字节的HTML文档和文档的字符集。
+   客户端浏览器读取响应数据HTML， 根据HTML的语法对其进行格式化，并在浏览器窗口显示。
+
+比如在浏览器地址栏输入URL， 按下回车后经历的流程如下：
+1. 浏览器向DNS服务器请求解析该URL域名中对应的IP地址。
+2. 解析出IP地址后，根据该IP地址和默认端口80， 和服务器建立TCP连接。
+3. 浏览器发出读取文件（URL中域名后面部分对应的文件）的http请求， 该请求报文作为TCP三次握手的第三个报文的数据发送给服务器。
+4. 服务器对浏览器请求做出响应，并把对应的html文本发送给浏览器。
+5. 释放TCP连接
+6. 浏览器将该HTML文本显示。
+
+GET和POST请求的区别
+GET请求
+    GET  /books/？sex=man&name=Professional HTTP/1.1
+    Host: www.wrox.com
+    User-Agent: Mozilla/5.0 
+    Connection: Keep-Alive
+    //空行
+ POST请求
+    POST / HTTP/1.1
+    Host： www.wrox.com
+    User-Agent: Mozilla/5.0
+    Connect-Type: application/x-www-form-urlencoded
+    Connect-Length: 40
+    Connection: Keep-Alive
+    
+    name=Professional%20Ajax&publisher=Wiley
+    
+ 
+ HTTP之请求消息Request
+ 客户端发送一个HTTP请求到服务器端的请求消息格式如下：
+ 请求行（request line）， 请求头部（header）， 空行和请求数据4部分组成。
+ 
+ 请求方法 空格  URL 空格 协议版本 回车符 换行符         请求行
+ 头部字段名： 值 回车符 换行符 
+           ...    
+ 头部字段名： 值 回车符 换行符                         请求头部
+ 回车符 换行符
+ 请求数据段                                         请求数据
+ 
+ HTTP之消息响应Response
+ 一般情况下，服务器接受并处理客户端发过来的请求后会返回一个http的响应消息。
+ HTTP响应也由4部分组成， 分别是 状态行， 消息报头，空行， 响应正文。
+ example：
+ HTTP/1.1 200 OK                                  状态行
+ Date： Sat， 31 Dec 2005 23：59：59 GMT
+ Content-Type： text/html；charset=ISO-8859-1
+ Content-Length： 122                              消息头
+ //空行
+ <html>                                           正文
+    <head>
+        <title>
+                Wrox Homepage
+        </title>
+    </head>
+    <body>
+        <!-- body goes here -->
+    </body>
+ </html>
+ 
